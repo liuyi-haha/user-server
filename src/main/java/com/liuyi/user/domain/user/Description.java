@@ -2,6 +2,7 @@ package com.liuyi.user.domain.user;
 
 import lombok.Getter;
 import org.liuyi.common.domain.exception.DomainException;
+
 @Getter
 public final class Description {
     private static final int MAX_LENGTH = 20;
@@ -26,4 +27,3 @@ public final class Description {
         }
     }
 }
-

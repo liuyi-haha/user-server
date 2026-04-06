@@ -1,0 +1,14 @@
+UserController.registerUser(String nickname, MultipartFile avatar, String phone, String password){
+    Application.registerUser(){
+        User user = UserService.registerUser(nickname, phone, avatar){
+               // 上传文件
+               String fileId = FileClient.uploadAvatar(avatar)
+               // 构造User(含验证逻辑)
+               User.createUser(nickname, phone, fileId, avatar)
+               // 保存User
+               UserRepository.save(User)
+           }
+       // 发布应用事件
+       UserRegisteredEventPublisher.publish(UserRegisteredEvent(user.getUserId().value(), phone, password))
+   }
+}

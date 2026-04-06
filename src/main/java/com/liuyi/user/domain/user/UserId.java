@@ -1,13 +1,11 @@
 package com.liuyi.user.domain.user;
 
-import lombok.Getter;
 import org.liuyi.common.domain.exception.DomainException;
 import org.liuyi.common.domain.object.Identity;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-@Getter
 public final class UserId implements Identity<String> {
     private static final Pattern USER_ID_PATTERN = Pattern.compile("^[1-9][0-9]{8}$");
 
@@ -48,4 +46,3 @@ final class UserIdGenerator {
         return Long.toString(id);
     }
 }
-
