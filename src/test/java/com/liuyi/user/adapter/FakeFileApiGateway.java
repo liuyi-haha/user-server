@@ -2,9 +2,11 @@ package com.liuyi.user.adapter;
 
 import com.liuyi.user.adapter.client.FileApiGateway;
 import lombok.Data;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.liuyi.common.domain.object.RandomIdGenerator;
-import org.liuyi.file.api.*;
+import org.liuyi.file.api.DownloadFileRequest;
+import org.liuyi.file.api.DownloadFileResponse;
+import org.liuyi.file.api.UploadFileRequest;
+import org.liuyi.file.api.UploadFileResponse;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -17,13 +19,13 @@ import java.util.List;
 @Profile("test")
 @Primary
 @Data
-@DubboService(interfaceClass = FileService.class)  // 添加这个注解
-public class FakeFileService implements FileApiGateway {
+public class FakeFileApiGateway implements FileApiGateway {
     // 文件大小限制：5MB
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
     private HashMap<String, byte[]> files = new HashMap<>();
     private List<UploadFileRequest> uploadFileRequestList = new ArrayList<>();
     private List<DownloadFileRequest> downloadFileRequests = new ArrayList<>();
+    private List<UploadFileResponse> uploadFileResponses = new ArrayList<>();
 
     @Override
     public UploadFileResponse uploadFile(UploadFileRequest request) {
@@ -48,6 +50,9 @@ public class FakeFileService implements FileApiGateway {
         response.setSuccess(true);
         response.setFileId(fileId);
 
+        // 记录响应
+        uploadFileResponses.add(response);
+
         return response;
     }
 
@@ -64,5 +69,6 @@ public class FakeFileService implements FileApiGateway {
         files.clear();
         uploadFileRequestList.clear();
         downloadFileRequests.clear();
+        uploadFileResponses.clear();
     }
 }

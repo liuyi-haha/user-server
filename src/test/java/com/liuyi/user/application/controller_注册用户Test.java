@@ -1,8 +1,9 @@
 package com.liuyi.user.application;
 
 import com.liuyi.user.adapter.FakeEventBus;
-import com.liuyi.user.adapter.FakeFileService;
+import com.liuyi.user.adapter.FakeFileApiGateway;
 import com.liuyi.user.api.RegisterUser200Response;
+import com.liuyi.user.api.RegisterUser200ResponseData;
 import com.liuyi.user.application.fixture.UserTextFixture;
 import com.liuyi.user.application.service.Application;
 import com.liuyi.user.domain.user.User;
@@ -30,23 +31,25 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) // 用内存数据库
-public class 注册用户Test {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+public class controller_注册用户Test {
     @Autowired
     private FakeEventBus eventBus;
     @Autowired
-    private FakeFileService fileService;
+    private FakeFileApiGateway fileService;
     @Autowired
     private Application application;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private FakeFileApiGateway fakeFileApiGateway;
 
     @BeforeEach
     void reset() {
         // 重置所有Fake类的内存
         fileService.reset();
         eventBus.reset();
+        fakeFileApiGateway.reset();
     }
 
     @Test
@@ -119,6 +122,10 @@ public class 注册用户Test {
         // 验证resp是否符合预期
         assertNull(resp.getErrCode());
         assertEquals(true, resp.getSuccess());
+        RegisterUser200ResponseData data = resp.getData();
+        assertNotNull(data);
+        assertNotNull(data.getUserId());
+        assertEquals(fakeFileApiGateway.getUploadFileResponses().get(0).getFileId(), data.getAvatarFileId());
 
         // 验证uploadFile接口的request是否符合预期
         UploadFileRequest expectedUploadFileRequest = new UploadFileRequest();
@@ -138,7 +145,7 @@ public class 注册用户Test {
         // 验证发布的事件是否符合预期（使用FakeEventBus）
         Event event = eventBus.getEvent(UserRegisteredEvent.TOPIC).get();
         UserRegisteredEvent expectedEvent = UserRegisteredEvent.builder().userId(resp.getData().getUserId()).phone(user.getPhone()).hashedPassword(user.getHashedPassword()).build();
-        assertInstanceOf(Event.class, event);
+        assertInstanceOf(UserRegisteredEvent.class, event);
         assertEquals(expectedEvent, event);
     }
 

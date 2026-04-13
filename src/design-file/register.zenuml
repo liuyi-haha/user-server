@@ -1,0 +1,5 @@
+UserController.registerUser(RegisterUserRequest){
+  String fileId = FileProvider.uploadFile(avatar)
+  
+
+}

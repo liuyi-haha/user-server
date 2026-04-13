@@ -20,15 +20,15 @@ public final class UserId implements Identity<String> {
         this.id = id;
     }
 
-    @Override
-    public String value() {
-        return id;
-    }
-
-    private void validate(String id) {
+    public static void validate(String id) {
         if (id == null || !USER_ID_PATTERN.matcher(id).matches()) {
             throw new DomainException("用户ID必须是9位数字字符串，且首位不能为0");
         }
+    }
+
+    @Override
+    public String value() {
+        return id;
     }
 }
 

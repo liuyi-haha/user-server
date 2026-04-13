@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Builder
-@AllArgsConstructor  // 添加这个
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "user_info")
 public class UserDO {
     @Id
@@ -18,13 +20,10 @@ public class UserDO {
     private String userId;
     @Column(length = 10, nullable = false)
     private String nickname;
-    @Column(unique = true, nullable = false)
+    @Column(length = 11, unique = true, nullable = false)
     private String phone;
-    @Column(nullable = false)
+    @Column(length = 20, nullable = false)
     private String description;
-    @Column(nullable = false)
+    @Column(length = 20, nullable = false)
     private String avatarId;
-
-    public UserDO() {
-    }
 }
