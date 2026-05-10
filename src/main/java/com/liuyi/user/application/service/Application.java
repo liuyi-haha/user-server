@@ -16,6 +16,7 @@ import org.liuyi.common.domain.exception.DomainException;
 import org.liuyi.use_api.dubbo.get_user.GetUserRequest;
 import org.liuyi.use_api.dubbo.get_user.GetUserResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -29,6 +30,7 @@ public class Application {
         this.userRegisteredEventPublisher = userRegisteredEventPublisher;
     }
 
+    @Transactional
     public RegisterUser200Response registerUser(String nickname, MultipartFile avatar, String phone, String password) {
         try {
             log.info("开始注册用户，nickname={}, phone={}", nickname, phone);
@@ -65,6 +67,7 @@ public class Application {
         return response;
     }
 
+    @Transactional
     public GetUserResponse getUser(GetUserRequest req) {
         try {
             User user = userService.getUser(req.getUserId());
@@ -87,6 +90,7 @@ public class Application {
         }
     }
 
+    @Transactional
     public SearchUser200Response searchUser(String keyword) {
         try {
             User user = userService.searchUser(keyword);

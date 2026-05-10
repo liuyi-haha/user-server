@@ -22,7 +22,7 @@ public class UserService {
 
     public User registerUser(String nickname, String phone, byte[] avatar, String password) {
         if (userRepository.existsByPhone(phone)) {
-            throw new PhoneRegisteredException("手机号已被注册");
+            throw new PhoneRegisteredException();
         }
         String fileId = fileClient.uploadAvatar(avatar);
         User user = User.createUser(nickname, phone, fileId, avatar);
